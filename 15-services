@@ -7,8 +7,8 @@ BOLD=`tput bold`
 NC=`tput sgr0`
 
 # default services if none given
-if [ -f /etc/cs-services.conf ]; then
-        services=$(cat /etc/cs-services.conf)
+if [ -f /etc/motd-services.conf ]; then
+        services=$(cat /etc/motd-services.conf)
 else
         services="sshd
 postfix"

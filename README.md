@@ -8,7 +8,7 @@ Simple `uname -a`
 ===========
 
 Checks whether listed services are active and enabled.
-Use file `/etc/cs-services.conf` to add services. If empty, defaults to sshd and postfix
+Use file `/etc/motd-services.conf` to add services. If empty, defaults to sshd and postfix
 
 20-ports
 ========
