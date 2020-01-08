@@ -1,0 +1,32 @@
+#!/bin/bash
+export TERM=xterm-256color
+
+GREEN=`tput setaf 2`
+RED=`tput setaf 1`
+RED_BG=`tput setab 1`
+BOLD=`tput bold`
+NC=`tput sgr0`
+
+df -h | sed '1d' | \
+echo
+while read line; do
+        mountpoint=$(echo $line | awk '{print $6}')
+        space_perc=$(echo $line | awk '{print $5}' | tr -d %)
+        if [[ $space_perc > 85 && $space_perc < 95 ]]; then
+                echo "${RED}Disk space on ${mountpoint} is short${NC}"
+        elif [[ $space_perc > 95 ]]; then
+                echo "${BOLD}${RED}Disk space on ${mountpoint} is CRITICAL${NC}"
+        fi
+done
+
+df -i | sed '1d' | \
+while read line; do
+        mountpoint=$(echo $line | awk '{print $6}')
+        inode_perc=$(echo $line | awk '{print $5}' | tr -d %)
+        if [[ $inode_perc > 85 && $inode_perc < 95 ]]; then
+                echo "${RED}inode space on ${mountpoint} is short${NC}"
+        elif [[ $inode_perc > 95 ]]; then
+                echo "${BOLD}${RED}INODE space on ${mountpoint} is CRITICAL${NC}"
+        fi
+done
+

@@ -1,0 +1,23 @@
+#!/bin/bash
+export TERM=xterm-256color
+
+BOLD=`tput bold`
+NC=`tput sgr0`
+  
+up=$(uptime)
+load_1m=$(echo $up | cut -d',' -f3 | cut -d' ' -f4)
+load_5m=$(echo $up | cut -d',' -f5 | cut -d' ' -f2)
+load_10m=$(echo $up | cut -d',' -f7 | cut -d' ' -f2)
+
+
+if [[ $(echo $up |cut -d',' -f3 | awk '{print $1}') > 0 ]]; then # when this script runs, the user is not listed yet (/bin/login not run yet)
+        echo
+        echo "${BOLD}OTHER USERS:${NC}"
+        w | sed '1d'
+fi
+if [[ $load_1m > 2 || $load_5m > 2 || $load_10m > 2 ]]; then
+        echo
+        echo "${BOLD}UPTIME:${NC}"
+        uptime
+fi
+

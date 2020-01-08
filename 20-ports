@@ -1,0 +1,22 @@
+#!/bin/bash
+export TERM=xterm-256color
+
+green=`tput setaf 2`
+bold=`tput bold`
+normal=`tput sgr0`
+
+echo
+echo -ne "${bold}PORTS:${normal}"
+services=$(netstat -plt | sed '1,2d' | grep ":*" | awk '{print $7}' | cut -f2 -d'/' | cut -f1 -d':' | sort | uniq)
+for service in $services; do
+        echo -ne "\n${bold}$service:${normal} "
+        pids=$(pidof $service)
+        ports=""
+        for pid in $pids; do
+                ports="${ports} $(lsof -w -nPp $pid | grep "LISTEN" | awk '{print $9}' | cut -d: -f2)"
+        done
+        ports=$(echo $ports | tr ' ' '\n' | sort -n | uniq)
+        echo -n $ports
+done
+echo
+

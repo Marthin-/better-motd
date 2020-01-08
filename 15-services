@@ -1,0 +1,33 @@
+#!/bin/bash
+export TERM=xterm-256color
+  
+GREEN=`tput setaf 2`
+RED_BG=`tput setab 1`
+BOLD=`tput bold`
+NC=`tput sgr0`
+
+# default services if none given
+if [ -f /etc/cs-services.conf ]; then
+        services=$(cat /etc/cs-services.conf)
+else
+        services="sshd
+postfix"
+fi
+
+echo "${BOLD}SERVICES:${NC}"
+
+for service in $services ; do
+    active=$(service $service status | grep "Active" | awk '{print $2}')
+    enabled=$(service $service status | grep "enabled" | awk '{print $4}')
+    echo -n "$service: "
+    if [[ $active == 'active' && $enabled == 'enabled;' ]]; then
+        echo "${GREEN}[OK]${NC}"
+    fi
+    if [[ $active != 'active' ]]; then
+        echo "${RED_BG}[NOK] Service is not active [NOK]${NC} "
+    fi
+    if [[ $enabled != 'enabled;' ]]; then
+        echo "${RED_BG}[NOK] Service is not enabled [NOK]${NC}"
+    fi
+done
+
